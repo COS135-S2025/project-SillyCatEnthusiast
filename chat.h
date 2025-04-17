@@ -4,9 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
+
 
 #define BUFFER_SIZE 280
 
-char* getMessage();
+void* getMessage(void* buffer);
 
 #endif

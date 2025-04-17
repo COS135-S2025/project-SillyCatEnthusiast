@@ -1,9 +1,10 @@
 #include "chat.h"
 
-char* getMessage(){
-    char buffer;
-    char 
-    buffer = malloc(sizeof(char) * BUFFER_SIZE); // create and malloc the buffer to a size of 280 char
-    fgets(buffer, BUFFER_SIZE, stdin);
-    strcpy(buffer, )
+void* getMessage(void* buffer){
+    char* inpBuffer = (char*) buffer;
+    if (fgets(inpBuffer, BUFFER_SIZE, stdin) != NULL) {
+        char *ptr = inpBuffer + strlen(inpBuffer) - 1;
+        while(isspace(*ptr)) {ptr --;};
+        *(ptr+1) = '\0';   
+    }
 }
