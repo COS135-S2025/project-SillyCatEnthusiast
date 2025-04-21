@@ -7,11 +7,18 @@
 #include <ctype.h>
 #include <ncurses.h>
 
+typedef struct {
+    char *text;
+    char *user;
+    time_t timestamp;
+} Message;
 
-#define CHAR_COUNT 280
+#define CHAR_MAX 280
+#define USER_MAX 20
+void getMessage(char *ptr, WINDOW* win);
 
-void getMessage(char *ptr, WINDOW* window);
 
+Message* createMessage();
 
-
+void freeMessage(Message *msg);
 #endif
