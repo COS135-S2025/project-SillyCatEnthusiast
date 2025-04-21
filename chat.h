@@ -5,10 +5,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <ncurses.h>
 
 
-#define BUFFER_SIZE 280
+#define CHAR_COUNT 280
 
-void* getMessage(void* buffer);
+void getMessage(char *ptr, WINDOW* window);
+
+
 
 #endif
