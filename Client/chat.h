@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <ncurses.h>
+#include <arpa/inet.h>
 
 typedef struct {
     char *text;

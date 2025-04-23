@@ -3,14 +3,14 @@
 Storage* createStorage(){
     Storage *s = malloc(sizeof(Storage));
     s -> msgMax = 5;
-    s -> msgArray = malloc(sizeof(Message) * s -> msgMax);
+    s -> msgArray = malloc(sizeof(Message*) * s -> msgMax);
     s -> msgCount = 0;
 
     return s;
 }
 
 void freeStorage(Storage *s){
-    for (int i = 0; i <= s-> msgCount; i++){
+    for (int i = 0; i < s-> msgCount; i++){
         freeMessage(s -> msgArray[i]);
     }
     free(s);
@@ -28,24 +28,32 @@ void trim(char *msg){
 }
 
 void expand(Storage *s){
-    Message** temp = realloc(s -> msgArray, sizeof(s -> msgArray) * s -> msgMax * 2);
+    Message** temp = realloc(s -> msgArray, sizeof(Message*) * s -> msgMax * 2);
     if (temp == NULL) {
         perror("realloc failed");
         exit(1);
     }
     else{
         s -> msgArray = temp;
+        s -> msgMax *= 2;
     }
 }
 void input(Storage *s, WINDOW *top, WINDOW *bottom){
-    int i = 0;
+    int max_y, max_x;
+    getmaxyx(top, max_y, max_x);
     Message *m = createMessage();
-    getMessage(m -> text, bottom);
-    trim(m -> text);
-    mvwprintw(bottom, 1, 2, "> %s", m -> text);
+    wmove(bottom, 1, 4);
     wclrtoeol(bottom);
+    getMessage(m -> text, bottom); // stores the input into the message obj
+    trim(m -> text);
+    wprintw(bottom, "> %s", m -> text);
     wrefresh(bottom);
-    mvwprintw(top, i++, 1, "You entered: %s", m -> text);
+    wprintw(top, "You: %s\n", m->text);  // use newline to scroll
+    wrefresh(top);
+
+    if (s->msgCount == s->msgMax) {
+        expand(s);
+    }
     s -> msgArray[s -> msgCount] = m;
     s -> msgCount++;
 }

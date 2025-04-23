@@ -17,7 +17,7 @@ void getMessage(char *ptr, WINDOW* win){
                 i--;
                 mvwdelch(win, getcury(win), getcurx(win) - 1);
             }
-        } else {
+        } else if (isprint(ch)){
             ptr[i++] = ch;
             waddch(win, ch);
         }
@@ -26,7 +26,6 @@ void getMessage(char *ptr, WINDOW* win){
     ptr[i] = '\0';
     // gets the input and stores it in a string
 }
-
 
 void freeMessage(Message *msg){
     free(msg -> text);
