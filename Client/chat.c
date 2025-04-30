@@ -33,3 +33,8 @@ void freeMessage(Message *msg){
     free(msg);
 
 }
+void sendText(int sock, Message *m){
+    int msgLen = strlen(m -> text + 1);
+    send(sock, &msgLen, sizeof(msgLen), 0);
+    send(sock, m -> text, sizeof(m -> text), 0);
+}

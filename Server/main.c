@@ -19,13 +19,14 @@ int main(){
     server_addr.sin_port = htons(8080);       // port number
     bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)); 
     // typecasts server_addr into a regular sockaddr and binds the connector to the server file descriptor
-    listen(server_fd, 5); // listens for up to 5 queued inputs
+    listen(server_fd, 5); // listens for up to 5 queued requests
     addr_size = sizeof(client_addr);
     client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_size); // binds the client
+
     while (1){
-    read(client_fd, &msg, sizeof(msg)); // reads the connection to the client like a file
-    printf("Received: %s\n", buffer);
-    send(client_fd, msg.text, strlen(msg.text) + 1, 0); // sends x bytes of information (can be anything)
+    recieveText(client_fd, msg);
+    printf("Received: %s\n", m.text);
+    sendText(client_fd, msg);
     }
     close(client_fd);
     close(server_fd); // cleanup

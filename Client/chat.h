@@ -22,4 +22,6 @@ void getMessage(char *ptr, WINDOW* win);
 Message* createMessage();
 
 void freeMessage(Message *msg);
+
+void sendText(int sock, Message *m);
 #endif

@@ -28,16 +28,17 @@ int main(){
 
 
     
-    Storage *s = createStorage(); // object oriented seemed to work best
+    Storage *outgoing = createStorage();
+    Storage *incoming = createStorage(); // object oriented seemed to work best
     wmove(bottom, 1, 2);
     wmove(top, 0, 0);
     wprintw(bottom, "> "); // inital setup because the current method moves it after
     while (1){
-        input(s, top, bottom);
-        send(sock, &s -> msgArray[s ->msgCount], sizeof(s -> msgArray[s -> msgCount]), 0);
-        read(sock, buffer, sizeof(buffer));
-        wprintw(top, 0, 0, "Server: %s\n", buffer); 
-        wrefresh(top);
+        input(outgoing, bottom);
+        output(incoming, top);
+        sendText(sock, outgoing -> msgArray[outgoing -> msgCount]);
+        servInput(sock, incoming);
+        servOutput(incoming, top);
     }
     close(sock);
     endwin();
