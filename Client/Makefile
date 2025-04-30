@@ -1,4 +1,3 @@
-
 chatter: main.o chat.o memory.o
 	gcc   main.o chat.o memory.o -o chatter -lncurses
 

@@ -4,15 +4,18 @@
 #include <unistd.h>       
 #include <arpa/inet.h>    
 #include <sys/socket.h>   
+#include "connector.h"
+#include "linked.h"
 int main(){
+    Node* head = NULL;
 
-    Message msg;
+    Message *msg = malloc(sizeof(Message));
     int server_fd; 
-    int client_fd;
+    // int client_fd;
     struct sockaddr_in server_addr; // creates a sockaddr_in for handling incoming connections 
-    struct sockaddr_in client_addr; // creates a sockaddr_in for maintaining a connection to a specific client
-    socklen_t addr_size; // just a fancier int 
-    char buffer[1024] = {0}; // basically just calloc
+    // struct sockaddr_in client_addr; // creates a sockaddr_in for maintaining a connection to a specific client
+    // socklen_t addr_size; // just a fancier int 
+    // char buffer[1024] = {0}; // basically just calloc
     server_fd = socket(AF_INET, SOCK_STREAM, 0); // tells it that its looking for an ipv4 tcp
     server_addr.sin_family = AF_INET; // tells it that it is an ipv4 server
     server_addr.sin_addr.s_addr = INADDR_ANY; // allowed ips: 0.0.0.0 (all)
@@ -20,15 +23,21 @@ int main(){
     bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)); 
     // typecasts server_addr into a regular sockaddr and binds the connector to the server file descriptor
     listen(server_fd, 5); // listens for up to 5 queued requests
-    addr_size = sizeof(client_addr);
-    client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_size); // binds the client
-
+    // addr_size = sizeof(client_addr);
     while (1){
-    recieveText(client_fd, msg);
-    printf("Received: %s\n", m.text);
-    sendText(client_fd, msg);
+    Node *n = newNode();
+    addNode(&head, n);
+
+    n -> client_fd = accept(server_fd, (struct sockaddr*)&n -> client_addr, &n -> addr_size); // binds the client
+    void printList(Node* head);
     }
-    close(client_fd);
-    close(server_fd); // cleanup
+    // while (1){
+    // recieveText(client_fd, msg);
+    // printf("Received: %s\n", msg -> text);
+    // servSendText(client_fd, msg);
+    // }
+    // close(client_fd);
+    // close(server_fd); // cleanup
+
 
 }

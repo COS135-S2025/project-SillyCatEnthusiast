@@ -11,10 +11,11 @@ int main(){
     WINDOW *top = newwin(rows - 3, cols, 0, 0); // dedicated the top x-3 rows to the top window
     WINDOW *bottom = newwin(3, cols, rows - 3, 0); // dedicates the bottom 3 rows to the bottom window
     scrollok(top, TRUE);
+
     box(bottom, 0, 0);
     wrefresh(top);
     wrefresh(bottom);
-    nodelay(bottom, TRUE); 
+    nodelay(bottom, FALSE); 
     //Window parameters and init
 
     int sock = 0;
@@ -35,8 +36,8 @@ int main(){
     wprintw(bottom, "> "); // inital setup because the current method moves it after
     while (1){
         input(outgoing, bottom);
-        output(incoming, top);
-        sendText(sock, outgoing -> msgArray[outgoing -> msgCount]);
+        output(outgoing, top);
+        sendText(sock, outgoing -> msgArray[outgoing -> msgCount - 1]);
         servInput(sock, incoming);
         servOutput(incoming, top);
     }
