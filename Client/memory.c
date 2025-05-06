@@ -57,18 +57,44 @@ void output(Storage *s, WINDOW *top){
     wprintw(top, "You: %s\n", s -> msgArray[s -> msgCount - 1] -> text);  // use newline to scroll
     wrefresh(top);
 }
-void servInput(int sock, Storage *s){
+void* handleServerIO(void *arg) {
+    ThreadArgs *args = (ThreadArgs*)arg;
+    int sock = args->sock;
+    Storage *s = args->storage;
+    WINDOW *win = args->win;
+
     Message *m = createMessage();
     char *buffer = malloc(sizeof(char) * 280);
     int mLen;
-    read(sock, &mLen, sizeof(mLen)); // stores the length of the incoming string in mlen
-    read(sock, buffer, mLen); // incoming string
-    trim(buffer);
-    strcpy(m -> text, buffer);
-    s -> msgArray[s -> msgCount] = m; // stores the value recieved from server
-    s -> msgCount++;
+    while (1){
+    if (read(sock, &mLen, sizeof(mLen)) <= 0) {
+        free(buffer);
+        free(m->text);
+        free(m->user);
+        free(m);
+        free(args);
+        return NULL;
+    }
 
-}
-void servOutput(Storage *s, WINDOW *win){
-    wprintw(win, "Server: %s\n", s -> msgArray[s -> msgCount -1] -> text); 
+    if (read(sock, buffer, mLen) <= 0) {
+        free(buffer);
+        free(m->text);
+        free(m->user);
+        free(m);
+        free(args);
+        return NULL;
+    }
+    
+    trim(buffer);
+    strcpy(m->text, buffer);
+
+    s->msgArray[s->msgCount] = m;
+    s->msgCount++;
+
+    wprintw(win, "Server: %s\n", m->text);
+    wrefresh(win);
+    }
+    free(buffer);
+    free(args);
+    return NULL;
 }

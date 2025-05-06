@@ -9,7 +9,11 @@ typedef struct {
     int msgCount;
     int msgMax;
 } Storage;
-
+typedef struct {
+    int sock;
+    Storage *storage;
+    WINDOW *win;
+} ThreadArgs;
 Storage* createStorage();
 
 void freeStorage(Storage *s);
@@ -24,7 +28,5 @@ void input(Storage *s, WINDOW *bottom);
 
 void output(Storage *s, WINDOW *top);
 
-void servInput(int sock, Storage *s);
-
-void servOutput(Storage *s, WINDOW *win);
+void* handleServerIO(void *arg);
 #endif

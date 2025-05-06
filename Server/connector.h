@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>   
+#include <pthread.h>
 //
 typedef struct {
     char *text;
@@ -14,4 +15,6 @@ typedef struct {
 void recieveText(int sock, Message *m);
 
 void servSendText(int sock, Message *m);
+
+void* clientHandler(void *arg);
 #endif

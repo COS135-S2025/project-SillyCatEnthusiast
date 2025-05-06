@@ -14,7 +14,7 @@ typedef struct Node{
 
 void addNode(Node** head, Node *newN);
 
-void popNode(Node *head, Node *removed);
+void popNode(Node **head, Node *removed);
 
 Node* newNode();
 

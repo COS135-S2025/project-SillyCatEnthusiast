@@ -1,5 +1,5 @@
 chatter: main.o chat.o memory.o
-	gcc   main.o chat.o memory.o -o chatter -lncurses
+	gcc   main.o chat.o memory.o -o chatter -lncurses -lpthread
 
 main.o: main.c chat.h memory.h
 	gcc   main.c -c -o main.o

@@ -41,7 +41,7 @@ void getMessage(char *ptr, WINDOW* win){
     keypad(win, FALSE);
 }
 
-void freeMessage(Message *msg){
+void freeMessage(Message *msg){ // frees message
     free(msg -> text);
     free(msg -> user);
     free(msg);
