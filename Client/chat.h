@@ -17,11 +17,9 @@ typedef struct {
 #define CHAR_MAX 280
 #define USER_MAX 20
 void getMessage(char *ptr, WINDOW* win);
-
-
 Message* createMessage();
-
 void freeMessage(Message *msg);
 
-void sendText(int sock, Message *m);
+bool input(Storage *s, WINDOW *bottom);
+void output(Storage *s, WINDOW *top);
 #endif

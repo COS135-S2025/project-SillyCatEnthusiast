@@ -16,6 +16,7 @@ void getMessage(char *ptr, WINDOW* win){
     while (i < 279) {
         ch = wgetch(win);
         wrefresh(win);
+        //Manually builds the string out of char
         if (ch != '\n'){
             if (ch == KEY_BACKSPACE || ch == 127 || ch == 8) {
                 wrefresh(win);
@@ -26,10 +27,12 @@ void getMessage(char *ptr, WINDOW* win){
                     mvwprintw(win, y, x - 1, " ");  // overwrite with space
                     wmove(win, y, x - 1);           // move cursor back
                 }
-            } else if (isprint(ch)){
+            } 
+            else if (isprint(ch)){
                 ptr[i++] = ch;
                 waddch(win, ch);
             }
+            
             wrefresh(win);
         }
         else{
@@ -37,7 +40,6 @@ void getMessage(char *ptr, WINDOW* win){
         }
     }
     ptr[i] = '\0';
-    // gets the input and stores it in a string
     keypad(win, FALSE);
 }
 
@@ -46,9 +48,30 @@ void freeMessage(Message *msg){ // frees message
     free(msg -> user);
     free(msg);
 }
-void sendText(int sock, Message *m){
-    int msgLen;
-    msgLen = strlen(m -> text)+ 1;
-    send(sock, &msgLen, sizeof(msgLen), 0);
-    send(sock, m -> text, msgLen, 0);
+bool input(Storage *s, WINDOW *bottom){
+    //Setup the window and the storage
+    Message *m = createMessage();
+    wmove(bottom, 1, 4);
+    wclrtoeol(bottom);
+    //Store message
+    getMessage(m -> text, bottom);
+    trim(m -> text);
+    wrefresh(bottom);
+    if (s->msgCount == s->msgMax) {
+        expand(s);
+    }
+    s -> msgArray[s -> msgCount] = m;
+    //Check for exit
+    if (strcmp(s -> msgArray[s -> msgCount] -> text,("/exit"))){
+        s -> msgCount++;
+        return true;
+    }
+    else{
+        s -> msgCount++;
+        return false;
+    }
+}
+void output(Storage *s, WINDOW *top){
+    wprintw(top, "You: %s\n", s -> msgArray[s -> msgCount - 1] -> text);  // uses newline to scroll
+    wrefresh(top);
 }
