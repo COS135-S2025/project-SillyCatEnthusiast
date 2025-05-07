@@ -43,9 +43,9 @@ void* clientHandler(void *arg) {
     }
 
     pthread_mutex_lock(&list_lock);
-    popNode(&head, client);
-    pthread_mutex_unlock(&list_lock);
     close(client->client_fd);
+    head = popNode(head, client);
+    pthread_mutex_unlock(&list_lock);
     free(msg->text);
     free(msg);
     return NULL;

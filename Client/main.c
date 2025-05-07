@@ -2,7 +2,9 @@
 #include "chat.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <errno.h>
 int main(int argc, char *argv[]) {
+    bool stop = true;
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <server_ip>\n", argv[0]);
         exit(EXIT_FAILURE);
@@ -20,12 +22,18 @@ int main(int argc, char *argv[]) {
     WINDOW *bottom = newwin(3, cols, rows - 3, 0); // dedicates the bottom 3 rows to the bottom window
     scrollok(top, TRUE);
 
+    //Window parameters and init
     box(bottom, 0, 0);
     wrefresh(top);
     wrefresh(bottom);
     nodelay(bottom, FALSE); 
-    //Window parameters and init
+    wmove(bottom, 1, 2);
+    wmove(top, 0, 0);
+    wprintw(top, "Connected to %s:%d\n", server_ip, port);
+    wrefresh(top);
+    wprintw(bottom, "> ");
 
+    //Server init
     int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[1024] = {0};
@@ -38,19 +46,13 @@ int main(int argc, char *argv[]) {
     }
 
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-        perror("connect failed");
+        perror("Connection failed");
         exit(EXIT_FAILURE);
     }
 
-
     Storage *outgoing = createStorage();
     Storage *incoming = createStorage();
-    wmove(bottom, 1, 2);
-    wmove(top, 0, 0);
-    wprintw(top, "Connected to %s:%d\n", server_ip, port);
-    wrefresh(top);
-    
-    wprintw(bottom, "> "); // inital setup because the current method moves it after
+
     pthread_t serverThread;
     ThreadArgs *args = malloc(sizeof(ThreadArgs));
     args->sock = sock;
@@ -59,13 +61,19 @@ int main(int argc, char *argv[]) {
     
     pthread_create(&serverThread, NULL, handleServerIO, args);
     pthread_detach(serverThread); 
-    while (1){
-        input(outgoing, bottom);
+    while (stop){
+        stop = input(outgoing, bottom);
         output(outgoing, top);
         sendText(sock, outgoing -> msgArray[outgoing -> msgCount - 1]);
     }
+
+    // clean up
+    freeStorage(outgoing);
+    freeStorage(incoming);
+
     close(sock);
     endwin();
-
+    delscreen(top);
+    delscreen(bottom);
     return 0;
 }

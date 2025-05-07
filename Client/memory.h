@@ -24,7 +24,7 @@ void expand(Storage *s);
 
 void freeStorage(Storage *s);
 
-void input(Storage *s, WINDOW *bottom);
+bool input(Storage *s, WINDOW *bottom);
 
 void output(Storage *s, WINDOW *top);
 

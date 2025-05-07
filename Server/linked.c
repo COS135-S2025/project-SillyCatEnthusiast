@@ -1,38 +1,38 @@
 #include "linked.h"
 
-void addNode(Node** head, Node *newN){
-    if (*head == NULL){
-        *head = newN;
+Node* addNode(Node* head, Node *newN){
+    if (head == NULL){
+        head = newN;
     }
     else{
-        Node* curr = *head;
-        while (curr->next != NULL) { // i do not care about time complexity rn
+        Node* curr = head;
+        while (curr->next != NULL) {
             curr = curr->next;
         }
         curr->next = newN;
     }
-    
+    return head;
 }
 
-void popNode(Node **head, Node *removed){
-    if(*head == removed){
-        Node *temp = *head;
-        *head = (*head)->next;
+Node* popNode(Node *head, Node *removed){
+    if(head == removed){
+        Node *temp = head;
+        head = head->next;
         free(temp);
-        return;
     }
     else {
-        Node *curr = *head;
-        while (curr->next != removed) { // i do not care about time complexity rn
-            curr = curr->next;
+        Node *curr = head;
+        while (curr->next != removed) { 
+            curr = curr->next; 
         }
-        curr -> next = curr -> next -> next;
-        free(curr);
+        curr -> next = removed -> next; 
+        free(removed);
     }
+    return head;
 }
 Node* newNode(){
     Node *n = malloc(sizeof(Node));
-        n -> next;
+        n -> next = NULL;
         n -> client_addr;
         n -> addr_size = sizeof(n -> client_addr);
 

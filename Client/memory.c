@@ -13,6 +13,7 @@ void freeStorage(Storage *s){
     for (int i = 0; i < s-> msgCount; i++){
         freeMessage(s -> msgArray[i]);
     }
+    free(s -> msgArray);
     free(s);
 }
 
@@ -38,20 +39,29 @@ void expand(Storage *s){
         s -> msgMax *= 2;
     }
 }
-void input(Storage *s, WINDOW *bottom){
+bool input(Storage *s, WINDOW *bottom){
 
     Message *m = createMessage();
     wmove(bottom, 1, 4);
     wclrtoeol(bottom);
     getMessage(m -> text, bottom); // stores the input into the message obj
     trim(m -> text);
-    // wprintw(bottom, "> %s", m -> text);
     wrefresh(bottom);
     if (s->msgCount == s->msgMax) {
         expand(s);
     }
     s -> msgArray[s -> msgCount] = m;
-    s -> msgCount++;
+    if (strcmp(s -> msgArray[s -> msgCount] -> text,("/exit"))){
+        s -> msgCount++;
+        return true;
+    }
+    else{
+        s -> msgCount++;
+        return false;
+    }
+
+
+
 }
 void output(Storage *s, WINDOW *top){
     wprintw(top, "You: %s\n", s -> msgArray[s -> msgCount - 1] -> text);  // use newline to scroll

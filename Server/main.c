@@ -40,7 +40,7 @@ int main(){
         pthread_create(&client, NULL, clientHandler, (void*)n);
         pthread_detach(client);
         pthread_mutex_lock(&list_lock);
-        addNode(&head, n);
+        head = addNode(head, n);
         pthread_mutex_unlock(&list_lock); // locks the list to prevent overwriting from different threads
     
 

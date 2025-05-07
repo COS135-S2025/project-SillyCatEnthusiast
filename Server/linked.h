@@ -12,9 +12,9 @@ typedef struct Node{
     struct sockaddr_in client_addr;
 } Node;
 
-void addNode(Node** head, Node *newN);
+Node* addNode(Node* head, Node *newN);
 
-void popNode(Node **head, Node *removed);
+Node* popNode(Node *head, Node *removed);
 
 Node* newNode();
 
