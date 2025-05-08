@@ -12,9 +12,9 @@ typedef struct {
     time_t timestamp;
 } Message;
 
-void recieveText(int sock, Message *m);
+// void recieveText(int sock, Message *m);
 
-void servSendText(int sock, Message *m);
+// void servSendText(int sock, Message *m);
 
 void* clientHandler(void *arg);
 #endif

@@ -1,6 +1,6 @@
-#ifndef CHAT
-#define CHAT
-
+#ifndef SERVER
+#define SERVER
+#include "chat.h"
 typedef struct {
     int sock;
     Storage *storage;

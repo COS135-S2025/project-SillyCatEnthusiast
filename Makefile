@@ -3,18 +3,20 @@ serverAndClient: client server
 	make server
 
 # client make file
-client: Cmain.o chat.o memory.o
-	gcc   Cmain.o chat.o memory.o -o client -lncurses -lpthread
+client: Cmain.o chat.o storage.o server.o
+	gcc   Cmain.o chat.o storage.o server.o -o client -lncurses -lpthread
 
-Cmain.o: Client/main.c Client/chat.h Client/memory.h
+Cmain.o: Client/main.c Client/chat.h Client/storage.h Client/server.h
 	gcc   Client/main.c -c -o Cmain.o
 
-chat.o: Client/chat.c Client/chat.h
+chat.o: Client/chat.c Client/chat.h Client/storage.h 
 	gcc   Client/chat.c -c -o chat.o
 
-memory.o: Client/memory.c Client/memory.h Client/chat.h
-	gcc   Client/memory.c -c -o memory.o
+storage.o: Client/storage.c Client/storage.h
+	gcc   Client/storage.c -c -o storage.o
 
+server.o: Client/server.c Client/server.h Client/chat.h
+	gcc   Client/server.c -c -o server.o
 # server make file
 server: Smain.o connector.o linked.o
 	gcc	Smain.o connector.o linked.o -o server -lncurses -lpthread

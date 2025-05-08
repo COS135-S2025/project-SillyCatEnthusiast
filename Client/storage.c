@@ -1,11 +1,22 @@
 #include "storage.h"
-
+Message* createMessage(){
+    Message *m = malloc(sizeof(Message));
+    m->text = malloc(sizeof(char) * CHAR_MAX);
+    m->user = malloc(sizeof(char) * USER_MAX);
+    return m;
+}
 Storage* createStorage(){
     Storage *s = malloc(sizeof(Storage));
     s -> msgMax = 5;
     s -> msgArray = malloc(sizeof(Message*) * s -> msgMax);
     s -> msgCount = 0;
     return s;
+}
+
+void freeMessage(Message *msg){ // frees message
+    free(msg -> text);
+    free(msg -> user);
+    free(msg);
 }
 
 void freeStorage(Storage *s){

@@ -1,19 +1,13 @@
 #include "chat.h"
 
-Message* createMessage(){
-    Message *m = malloc(sizeof(Message));
-    m->text = malloc(sizeof(char) * CHAR_MAX);
-    m->user = malloc(sizeof(char) * USER_MAX);
-    return m;
-}
+
 
 void getMessage(char *ptr, WINDOW* win){
     keypad(win, TRUE);
     wrefresh(win);
     int ch;
     int i = 0;
-
-    while (i < 279) {
+    while (i < CHAR_MAX - 1) {
         ch = wgetch(win);
         wrefresh(win);
         //Manually builds the string out of char
@@ -43,11 +37,6 @@ void getMessage(char *ptr, WINDOW* win){
     keypad(win, FALSE);
 }
 
-void freeMessage(Message *msg){ // frees message
-    free(msg -> text);
-    free(msg -> user);
-    free(msg);
-}
 bool input(Storage *s, WINDOW *bottom){
     //Setup the window and the storage
     Message *m = createMessage();

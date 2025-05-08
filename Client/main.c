@@ -1,5 +1,5 @@
-#include "memory.h"
 #include "chat.h"
+#include "server.h"
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
@@ -27,8 +27,8 @@ int main(int argc, char *argv[]) {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }
-    
-    //Window parameters and init
+
+    //Window parameters
     initscr();
     cbreak();
     noecho();
@@ -43,8 +43,15 @@ int main(int argc, char *argv[]) {
     nodelay(bottom, FALSE); 
     wmove(bottom, 1, 2);
     wmove(top, 0, 0);
+    //Window init
+    wprintw(bottom, "Enter Username:");
+    wrefresh(bottom);
+    char user[1024] = {0};
+    getMessage(user, bottom);
+    trim(user);
     wprintw(top, "Connected to %s:%d\n", server_ip, port);
     wrefresh(top);
+    wmove(bottom, 1, 2);
     wprintw(bottom, "> ");
 
 
@@ -66,6 +73,7 @@ int main(int argc, char *argv[]) {
     while (stop){
         stop = input(outgoing, bottom); // stops once input returns false (when the input is /exit)
         output(outgoing, top);
+        outgoing -> msgArray[outgoing -> msgCount - 1] -> user = user;
         sendText(sock, outgoing -> msgArray[outgoing -> msgCount - 1]);
     }
 
